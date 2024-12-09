@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -31,8 +30,8 @@ const authFormSchema = (formType: FormType) =>
   });
 
 const AuthForm = ({ type }: { type: FormType }) => {
-  const [isLoading, setisLoading] = useState(false);
-  const [errorMessage, seterrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const formSchema = authFormSchema(type);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,6 +43,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    setErrorMessage("");
     console.log(values);
   }
 
@@ -112,6 +113,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
             />
           )}
         </Button>
+
+        {errorMessage && <p className="error-message">*{errorMessage}</p>}
 
         <div className="body-2 flex justify-center">
           <p className="text-light-100">
