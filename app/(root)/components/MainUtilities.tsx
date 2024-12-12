@@ -1,5 +1,8 @@
+"use client";
+
 import FileUploader from "@/app/(root)/components/FileUploader";
 import { Button } from "@/components/ui/button";
+import { signOut } from "@/lib/actions/user.actions";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
@@ -23,6 +26,7 @@ const MainUtilities = ({ type }: MainUtilitiesProps) => {
           type === "header" && "sign-out-button",
           type === "mobile" && "mobile-sign-out-button"
         )}
+        onClick={() => signOut()}
       >
         <Image
           src="/assets/icons/logout.svg"
