@@ -7,7 +7,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
-const Sidebar = () => {
+interface SideBarProps {
+  fullName: string;
+  email: string;
+  avatar: string;
+}
+
+const Sidebar = ({ fullName, email, avatar }: SideBarProps) => {
   const pathname = usePathname();
   return (
     <aside className="sidebar">
@@ -65,15 +71,18 @@ const Sidebar = () => {
 
       <div className="sidebar-user-info">
         <Image
-          src={null}
+          src={
+            avatar ||
+            "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-avatar-profile-picture-male-icon.png"
+          }
           alt="Avatar"
           width={44}
           height={44}
           className="sidebar-user-avatar"
         />
         <div className="hidden lg:block">
-          <p className="subtitle-2 capitalize"></p>
-          <p className="caption"></p>
+          <p className="subtitle-2 capitalize">{fullName}</p>
+          <p className="caption">{email}</p>
         </div>
       </div>
     </aside>
