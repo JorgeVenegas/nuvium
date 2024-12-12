@@ -373,6 +373,9 @@
   .mobile-header {
     @apply flex h-[60px] justify-between px-5 sm:hidden !important;
   }
+  .mobile-wrapper {
+    @apply flex flex-col justify-between gap-5 pb-5 !important;
+  }
   .header-user {
     @apply my-3 flex items-center gap-2 rounded-full p-1 text-light-100 sm:justify-center sm:bg-brand/10 lg:justify-start lg:p-3 !important;
   }
@@ -420,6 +423,9 @@
   }
   .sidebar-nav {
     @apply h5 mt-9 flex-1 gap-1 text-brand !important;
+  }
+  .sidebar-nav-list {
+    @apply flex flex-1 flex-col gap-6 !important;
   }
   .sidebar-nav-item {
     @apply flex text-light-100 gap-4 rounded-xl lg:w-full justify-center lg:justify-start items-center h5 lg:px-[30px] h-[52px] lg:rounded-full !important;
