@@ -1,3 +1,5 @@
+"use client";
+
 import Thumbnail from "@/app/(root)/components/Thumbnail";
 import { convertFileToUrl, getFileType } from "@/lib/utils";
 import Image from "next/image";
@@ -12,7 +14,6 @@ const FileUploaderLoader = ({
   files,
   onRemoveFile,
 }: FileUploaderLoaderProps) => {
-  console.log("Files length is: ", files.length);
   return (
     <>
       {files.length > 0 && (

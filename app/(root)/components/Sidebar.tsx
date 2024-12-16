@@ -1,5 +1,3 @@
-"use client";
-
 import NavMenu from "@/app/(root)/components/NavMenu";
 import UserInfo from "@/app/(root)/components/UserInfo";
 import Image from "next/image";
@@ -12,7 +10,7 @@ interface SideBarProps {
   avatar: string;
 }
 
-const Sidebar = (currentUser: SideBarProps) => {
+const Sidebar = () => {
   return (
     <aside className="sidebar">
       <Link href="/">
@@ -32,7 +30,7 @@ const Sidebar = (currentUser: SideBarProps) => {
         />
       </Link>
 
-      <NavMenu type="sidebar"/>
+      <NavMenu type="sidebar" />
 
       <Image
         src={"/assets/images/files-2.png"}
@@ -42,7 +40,7 @@ const Sidebar = (currentUser: SideBarProps) => {
         className="w-full"
       />
 
-      <UserInfo type="sidebar" {...currentUser} />
+      <UserInfo type="sidebar" />
     </aside>
   );
 };

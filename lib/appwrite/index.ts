@@ -1,3 +1,5 @@
+"use server";
+
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { cookies } from "next/headers";
 import { Account, Avatars, Client, Databases, Storage } from "node-appwrite";
@@ -27,7 +29,7 @@ export const createAdminClient = async () => {
   const client = new Client()
     .setEndpoint(appwriteConfig.endpointUrl)
     .setProject(appwriteConfig.projectId)
-    .setKey(appwriteConfig.secretKey)
+    .setKey(appwriteConfig.secretKey);
 
   return {
     get account() {

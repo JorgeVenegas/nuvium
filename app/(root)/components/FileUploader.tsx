@@ -1,17 +1,57 @@
 "use client";
+
 import FileUploaderLoader from "@/app/(root)/components/FileUploaderLoader";
+import { useUser } from "@/app/(root)/components/UserProvider";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { MAX_FILE_SIZE_LIMIT } from "@/constants";
+import { useToast } from "@/hooks/use-toast";
+import { uploadFile } from "@/lib/actions/file.actions";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 
 const FileUploader = () => {
   const [files, setFiles] = useState<File[]>([]);
+  const { accountId, $id } = useUser();
+  const { toast } = useToast();
+  const path = usePathname();
 
-  const onDrop = (acceptedFile: File[]) => {
-    setFiles(acceptedFile);
-    console.log("Updated files");
+  const onDrop = async (acceptedFiles: File[]) => {
+    setFiles(acceptedFiles);
+
+    const uploadPromises = acceptedFiles.map(async (file) => {
+      if (file.size > MAX_FILE_SIZE_LIMIT) {
+        setFiles((prevFiles) => prevFiles.filter((f) => f.name !== file.name));
+
+        return toast({
+          description: (
+            <p className="body-2 text-white">
+              <span className="font-semibold">
+                {file.name.length > 30
+                  ? `${file.name.substring(0, 30)}...`
+                  : file.name}
+              </span>{" "}
+              is too large to upload. Max file size limit is 50MB.
+            </p>
+          ),
+          className: "error-toast",
+        });
+      }
+      const uploadedFile = await uploadFile({
+        file,
+        accountId,
+        ownerId: $id,
+        path,
+      });
+      if (uploadedFile) {
+        setFiles((files) =>
+          files.filter((file) => file.name !== uploadedFile.name)
+        );
+      }
+      return;
+    });
+    await Promise.all(uploadPromises);
   };
 
   const handleRemoveFile = (fileName: string) => {

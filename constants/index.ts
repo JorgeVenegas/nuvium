@@ -25,3 +25,5 @@ export const navItems = [
     url: "/others",
   },
 ];
+
+export const MAX_FILE_SIZE_LIMIT = 50 * 1024 * 1024;

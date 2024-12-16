@@ -16,13 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import NavMenu from "@/app/(root)/components/NavMenu";
 import MainUtilities from "@/app/(root)/components/MainUtilities";
 
-interface MobilenavigationProps {
-  fullName: string;
-  email: string;
-  avatar: string;
-}
-
-const MobileNavigation = (currentUser: MobilenavigationProps) => {
+const MobileNavigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <header className="mobile-header">
@@ -46,7 +40,7 @@ const MobileNavigation = (currentUser: MobilenavigationProps) => {
         </SheetTrigger>
         <SheetContent className="shad-sheet h-screen px-3">
           <SheetTitle>
-            <UserInfo type="mobile" {...currentUser} />
+            <UserInfo type="mobile" />
             <Separator className="mb-4 bg-light-200/20" />
           </SheetTitle>
           <NavMenu type="mobile" />

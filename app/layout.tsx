@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google"
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import React from "react";
+import { Toaster } from "@/components/ui/toaster";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-poppins"
-})
+  variable: "--font-poppins",
+});
 export const metadata: Metadata = {
   title: "StoreIt",
   description: "StoreIt - The only storage solution you need.",
@@ -20,10 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} antialiased`}
-      >
+      <body className={`${poppins.variable} antialiased`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

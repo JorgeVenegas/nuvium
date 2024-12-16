@@ -1,15 +1,17 @@
+"use client";
+
+import SignOutButton from "@/app/(root)/components/SignOutButton";
+import { useUser } from "@/app/(root)/components/UserProvider";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 
 interface UserInfoProps {
   type: "mobile" | "sidebar";
-  avatar: string;
-  fullName: string;
-  email: string;
 }
 
-const UserInfo = ({ type, avatar, fullName, email }: UserInfoProps) => {
+const UserInfo = ({ type }: UserInfoProps) => {
+  const { avatar, fullName, email } = useUser();
   return (
     <div
       className={cn(
@@ -30,10 +32,11 @@ const UserInfo = ({ type, avatar, fullName, email }: UserInfoProps) => {
           type === "mobile" && "header-user-avatar"
         )}
       />
-      <div className="sm:hidden lg:block">
+      <div className="sm:hidden lg:block flex-1">
         <p className="subtitle-2 capitalize">{fullName}</p>
         <p className="caption">{email}</p>
       </div>
+      {type === "mobile" && <SignOutButton />}
     </div>
   );
 };
