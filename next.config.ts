@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "uxwing.com",
       },
+      {
+        protocol: "https",
+        hostname: "cloud.appwrite.io",
+      },
     ],
   },
   experimental: {

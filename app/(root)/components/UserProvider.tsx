@@ -1,8 +1,9 @@
 "use client";
 
+import { Models } from "node-appwrite";
 import React, { createContext, useContext } from "react";
 
-interface UserContextProps {
+interface UserContextProps extends Models.Document {
   fullName: string;
   email: string;
   avatar: string;
