@@ -1,5 +1,8 @@
 "use client";
-import { Input } from "@/components/ui/input";
+import {
+  FileDetais,
+  RenameFile,
+} from "@/app/(root)/[type]/components/DialogContentContentComponents";
 import { ActionType } from "@/types";
 import { Models } from "node-appwrite";
 
@@ -12,6 +15,7 @@ interface DialogContentSelectorProps {
 
 const DialogContentSelector = ({
   action,
+  file,
   name,
   setName,
 }: DialogContentSelectorProps) => {
@@ -19,14 +23,8 @@ const DialogContentSelector = ({
 
   return (
     <>
-      {value === "rename" && (
-        <Input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      )}
-      {value === "details" && <p></p>}
+      {value === "rename" && <RenameFile name={name} setName={setName} />}
+      {value === "details" && <FileDetais file={file} />}
       {value === "share" && <p></p>}
       {value === "delete" && <p></p>}
     </>
