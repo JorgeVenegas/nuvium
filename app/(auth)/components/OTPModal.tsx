@@ -39,7 +39,6 @@ const OTPModal = ({
     try {
       const sessionId = await verifySecret({ accountId, password });
       if (sessionId) router.push("/");
-      console.log(sessionId);
     } catch (error) {
       console.log("Failed to verify OTP", error);
     }
