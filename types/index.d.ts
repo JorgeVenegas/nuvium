@@ -12,3 +12,9 @@ declare interface FileMenuDialogContentProps {
   file: Models.Document;
   onClose?: () => void;
 }
+
+declare interface ServerResponseType {
+  message: string;
+  responseStatus: "success" | "error";
+  data?: any;
+}

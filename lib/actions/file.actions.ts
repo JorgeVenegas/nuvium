@@ -9,6 +9,7 @@ import {
   handleError,
   parseStringify,
 } from "@/lib/utils";
+import { ServerResponseType } from "@/types";
 import { revalidatePath } from "next/cache";
 import { ID, Models, Query } from "node-appwrite";
 
@@ -24,7 +25,7 @@ export const uploadFile = async ({
   ownerId,
   accountId,
   path,
-}: UploadFileParams) => {
+}: UploadFileParams): Promise<ServerResponseType> => {
   try {
     const { storage, databases } = await createAdminClient();
 
@@ -61,9 +62,16 @@ export const uploadFile = async ({
       });
 
     revalidatePath(path);
-    return parseStringify(uploadedDocument);
+    return parseStringify({
+      message: "File uploaded successfully",
+      responseStatus: "success",
+      data: uploadedDocument,
+    });
   } catch (error) {
-    handleError(error, "Failed to upload file");
+    return parseStringify({
+      message: "Failed to upload file. Error found: " + error,
+      responseStatus: "error",
+    });
   }
 };
 
@@ -75,7 +83,7 @@ const createQueries = ({ currentUser }: CreateQueriesParams) => {
   const queries = [
     Query.or([
       Query.equal("owner", currentUser.$id),
-      Query.contains("users", currentUser.$id),
+      Query.contains("users", currentUser.email),
     ]),
   ];
 
@@ -97,9 +105,16 @@ export const getFiles = async () => {
       queries
     );
 
-    return parseStringify({ files });
+    return parseStringify({
+      message: "File retrieved successfully",
+      responseStatus: "success",
+      data: files,
+    });
   } catch (error) {
-    handleError(error, "Failed to get files");
+    return parseStringify({
+      message: "Failed to rename file. Error found: " + error,
+      responseStatus: "error",
+    });
   }
 };
 
@@ -115,7 +130,7 @@ export const renameFile = async ({
   newName,
   extension,
   path,
-}: RenameFileParams) => {
+}: RenameFileParams): Promise<ServerResponseType> => {
   const { databases } = await createAdminClient();
   const newNameWithExtension = `${newName}.${extension}`;
   try {
@@ -129,8 +144,65 @@ export const renameFile = async ({
     );
 
     revalidatePath(path);
-    return parseStringify(updatedFile);
+    return parseStringify({
+      message: "File renamed successfully",
+      responseStatus: "success",
+      data: updatedFile,
+    });
   } catch (error) {
-    handleError(error, "Failed to rename file");
+    return parseStringify({
+      message: "Failed to rename file. Error found: " + error,
+      responseStatus: "error",
+    });
+  }
+};
+
+interface setFileUsersProps {
+  action: "add" | "remove";
+  file: Models.Document;
+  emails: string[];
+  path: string;
+}
+
+export const updateFileUsers = async ({
+  action = "add",
+  file,
+  emails,
+  path,
+}: setFileUsersProps): Promise<ServerResponseType> => {
+  let newEmails: string[] = [];
+  if (action === "add") {
+    if (emails.length === 0) {
+      return parseStringify({
+        message: "Please enter a valid email addresses",
+        responseStatus: "error",
+      });
+    }
+
+    newEmails = [...new Set([...file.users, ...emails])];
+  } else if (action === "remove") {
+    newEmails = file.users.filter((email: string) => emails[0] !== email);
+  }
+  const { databases } = await createAdminClient();
+  try {
+    const updatedFile = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      file.$id,
+      { users: newEmails }
+    );
+
+    revalidatePath(path);
+    return parseStringify({
+      message: "File sharing preferences updated successfully.",
+      responseStatus: "success",
+      data: updatedFile,
+    });
+  } catch (error) {
+    return parseStringify({
+      message:
+        "Failed to update file sharing preferences. Error found: " + error,
+      responseStatus: "error",
+    });
   }
 };

@@ -14,7 +14,7 @@ interface fileCardProps {
 const FileCard = ({ file }: fileCardProps) => {
   return (
     <Link href={file.url} target="_blank" className="file-card">
-      <div className="flex justify-between items-start">
+      <div className="flex items-start justify-between">
         <Thumbnail
           type={file.type}
           extension={file.extension}
@@ -28,7 +28,9 @@ const FileCard = ({ file }: fileCardProps) => {
       <div className="file-card-details">
         <div className="flex justify-between">
           <p className="subtitle-2 line-clamp-1">{file.name}</p>
-          <Badge>{convertFileSize(file.size)}</Badge>
+          <Badge className="whitespace-nowrap">
+            {convertFileSize(file.size)}
+          </Badge>
         </div>
         <FormattedDateTime
           date={file.$createdAt}

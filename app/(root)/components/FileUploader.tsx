@@ -38,7 +38,7 @@ const FileUploader = () => {
           className: "error-toast",
         });
       }
-      const uploadedFile = await uploadFile({
+      const { data: uploadedFile } = await uploadFile({
         file,
         accountId,
         ownerId: $id,
@@ -49,7 +49,6 @@ const FileUploader = () => {
           files.filter((file) => file.name !== uploadedFile.name)
         );
       }
-      return;
     });
     await Promise.all(uploadPromises);
   };
