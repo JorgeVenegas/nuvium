@@ -15,7 +15,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { renameFile, updateFileUsers } from "@/lib/actions/file.actions";
+import {
+  deleteFile,
+  renameFile,
+  updateFileUsers,
+} from "@/lib/actions/file.actions";
 import { ActionType } from "@/types";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -56,6 +60,7 @@ const FileCardMenu = ({ file }: FileCardMenuprops) => {
           path,
         });
       },
+      delete: async () => deleteFile({ file, path }),
     };
 
     const { message, responseStatus } =
@@ -144,7 +149,12 @@ const FileCardMenu = ({ file }: FileCardMenuprops) => {
                 onRemoveUser={handleUnshareFile}
               />
             )}
-            {action.value === "delete" && <p></p>}
+            {action.value === "delete" && (
+              <p className="delete-confirmation">
+                Are you sure you want to delete{` `}
+                <span className="delete-file-name">{file.name}</span>?
+              </p>
+            )}
           </DialogHeader>
           {["rename", "delete", "share"].includes(action.value) && (
             <DialogFooter className="flex flex-col gap-3 md:flex-row">

@@ -171,6 +171,7 @@ export const updateFileUsers = async ({
   path,
 }: setFileUsersProps): Promise<ServerResponseType> => {
   let newEmails: string[] = [];
+
   if (action === "add") {
     if (emails.length === 0) {
       return parseStringify({
@@ -183,7 +184,9 @@ export const updateFileUsers = async ({
   } else if (action === "remove") {
     newEmails = file.users.filter((email: string) => emails[0] !== email);
   }
+
   const { databases } = await createAdminClient();
+
   try {
     const updatedFile = await databases.updateDocument(
       appwriteConfig.databaseId,
@@ -193,6 +196,7 @@ export const updateFileUsers = async ({
     );
 
     revalidatePath(path);
+
     return parseStringify({
       message: "File sharing preferences updated successfully.",
       responseStatus: "success",
@@ -202,6 +206,40 @@ export const updateFileUsers = async ({
     return parseStringify({
       message:
         "Failed to update file sharing preferences. Error found: " + error,
+      responseStatus: "error",
+    });
+  }
+};
+
+interface DeleteFileParams {
+  file: Models.Document;
+  path: string;
+}
+
+export const deleteFile = async ({
+  file,
+  path,
+}: DeleteFileParams): Promise<ServerResponseType> => {
+  const { databases, storage } = await createAdminClient();
+  try {
+    const deletedFile = await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      file.$id
+    );
+
+    if (deletedFile) {
+      await storage.deleteFile(appwriteConfig.bucketId, file.bucketFileId);
+    }
+
+    revalidatePath(path);
+    return parseStringify({
+      message: "File deleted successfully",
+      responseStatus: "success",
+    });
+  } catch (error) {
+    return parseStringify({
+      message: "Failed to delete file. Error found: " + error,
       responseStatus: "error",
     });
   }
