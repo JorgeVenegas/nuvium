@@ -9,7 +9,7 @@ import {
   handleError,
   parseStringify,
 } from "@/lib/utils";
-import { ServerResponseType } from "@/types";
+import { ActionType, FileType, ServerResponseType } from "@/types";
 import { revalidatePath } from "next/cache";
 import { ID, Models, Query } from "node-appwrite";
 
@@ -77,9 +77,10 @@ export const uploadFile = async ({
 
 interface CreateQueriesParams {
   currentUser: Models.Document;
+  types: FileType[];
 }
 
-const createQueries = ({ currentUser }: CreateQueriesParams) => {
+const createQueries = ({ currentUser, types }: CreateQueriesParams) => {
   const queries = [
     Query.or([
       Query.equal("owner", currentUser.$id),
@@ -87,17 +88,25 @@ const createQueries = ({ currentUser }: CreateQueriesParams) => {
     ]),
   ];
 
+  if (types.length > 0) {
+    queries.push(Query.equal("type", types));
+  }
   return queries;
 };
 
-export const getFiles = async () => {
+interface GetFilesParams {
+  types: FileType[];
+}
+
+export const getFiles = async ({ types }: GetFilesParams) => {
+  console.log("types", types);
   const { databases } = await createAdminClient();
 
   try {
     const currentUser = await getCurrentUser();
 
     if (!currentUser) throw new Error("User not found");
-    const queries = createQueries({ currentUser });
+    const queries = createQueries({ currentUser, types });
 
     const files = await databases.listDocuments(
       appwriteConfig.databaseId,

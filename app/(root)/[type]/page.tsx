@@ -1,16 +1,19 @@
 import FileCard from "@/app/(root)/[type]/components/FileCard";
 import { getFiles } from "@/lib/actions/file.actions";
+import { getFileTypesParams } from "@/lib/utils";
 import { FileType } from "@/types";
 import { Models } from "node-appwrite";
 
 interface FileTypePageProps {
-  params: Promise<{ type: FileType }>;
+  params: Promise<{ type: string }>;
 }
 
 const Page = async ({ params }: FileTypePageProps) => {
-  const type = ((await params).type as string) || "";
+  const type = (await params).type || "";
 
-  const { data: files } = await getFiles();
+  const types = getFileTypesParams(type) as FileType[];
+
+  const { data: files } = await getFiles({ types });
   return (
     <div className="page-container">
       <section className="w-full">
