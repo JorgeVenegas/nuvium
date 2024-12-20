@@ -107,12 +107,16 @@ const createQueries = ({
 };
 
 interface GetFilesParams {
-  types: FileType[];
+  types?: FileType[];
   query: string;
-  sort: string;
+  sort?: string;
 }
 
-export const getFiles = async ({ types, query, sort }: GetFilesParams) => {
+export const getFiles = async ({
+  types = [],
+  query,
+  sort = "$createdAt-desc",
+}: GetFilesParams) => {
   console.log("types", types);
   const { databases } = await createAdminClient();
 

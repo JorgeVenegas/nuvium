@@ -15,7 +15,7 @@ interface FileTypePageProps {
 const Page = async ({ searchParams, params }: FileTypePageProps) => {
   const type = (await params).type || "";
   const query = ((await searchParams)?.query as string) || "";
-  const sort = ((await searchParams)?.sort as string) || "$createdAt-desc";
+  const sort = ((await searchParams)?.sort as string) || "";
 
   const types = getFileTypesParams(type) as FileType[];
 
