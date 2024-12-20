@@ -2,18 +2,24 @@ import FileCard from "@/app/(root)/[type]/components/FileCard";
 import { getFiles } from "@/lib/actions/file.actions";
 import { getFileTypesParams } from "@/lib/utils";
 import { FileType } from "@/types";
+import { useSearchParams } from "next/navigation";
 import { Models } from "node-appwrite";
 
 interface FileTypePageProps {
-  params: Promise<{ type: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{
+    type: string;
+  }>;
 }
 
-const Page = async ({ params }: FileTypePageProps) => {
+const Page = async ({ searchParams, params }: FileTypePageProps) => {
   const type = (await params).type || "";
+  const query = ((await searchParams)?.query as string) || "";
+  const sort = ((await searchParams)?.sort as string) || "$createdAt-desc";
 
   const types = getFileTypesParams(type) as FileType[];
 
-  const { data: files } = await getFiles({ types });
+  const { data: files } = await getFiles({ types, query, sort });
   return (
     <div className="page-container">
       <section className="w-full">

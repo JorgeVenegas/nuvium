@@ -78,9 +78,16 @@ export const uploadFile = async ({
 interface CreateQueriesParams {
   currentUser: Models.Document;
   types: FileType[];
+  query: string;
+  sort: string;
 }
 
-const createQueries = ({ currentUser, types }: CreateQueriesParams) => {
+const createQueries = ({
+  currentUser,
+  types,
+  query,
+  sort,
+}: CreateQueriesParams) => {
   const queries = [
     Query.or([
       Query.equal("owner", currentUser.$id),
@@ -88,17 +95,24 @@ const createQueries = ({ currentUser, types }: CreateQueriesParams) => {
     ]),
   ];
 
-  if (types.length > 0) {
-    queries.push(Query.equal("type", types));
+  if (types.length > 0) queries.push(Query.equal("type", types));
+  if (query) queries.push(Query.contains("name", query));
+  if (sort) {
+    const [sortBy, orderBy] = sort.split("-");
+    queries.push(
+      orderBy === "asc" ? Query.orderAsc(sortBy) : Query.orderDesc(sortBy)
+    );
   }
   return queries;
 };
 
 interface GetFilesParams {
   types: FileType[];
+  query: string;
+  sort: string;
 }
 
-export const getFiles = async ({ types }: GetFilesParams) => {
+export const getFiles = async ({ types, query, sort }: GetFilesParams) => {
   console.log("types", types);
   const { databases } = await createAdminClient();
 
@@ -106,7 +120,7 @@ export const getFiles = async ({ types }: GetFilesParams) => {
     const currentUser = await getCurrentUser();
 
     if (!currentUser) throw new Error("User not found");
-    const queries = createQueries({ currentUser, types });
+    const queries = createQueries({ currentUser, types, query, sort });
 
     const files = await databases.listDocuments(
       appwriteConfig.databaseId,
