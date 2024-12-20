@@ -8,6 +8,16 @@ import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Models } from "node-appwrite";
 import React, { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Search = () => {
   const searchParams = useSearchParams();
@@ -17,33 +27,43 @@ const Search = () => {
   const [searchResults, setSearchResults] = useState<Models.Document[]>([]);
   const router = useRouter();
   const path = usePathname();
+  const [debouncedQuery] = useDebounce(query, 300);
 
   useEffect(() => {
     const fetchFiles = async () => {
-      if (query.length === 0) {
+      if (debouncedQuery.length === 0) {
         setSearchResults([]);
         setViewSearchResults(false);
         return router.push(path.replace(searchParams.toString(), ""));
       }
-      const { data: files } = await getFiles({ query });
+      const { data: files } = await getFiles({ query: debouncedQuery });
       setViewSearchResults(true);
       setSearchResults(files.documents);
-      console.log("query", query);
-      console.log("files", files);
     };
 
     fetchFiles();
-  }, [query]);
+  }, [debouncedQuery]);
 
   useEffect(() => {
     if (!searchQuery) setQuery("");
-  }, [searchQuery]);
+  }, [searchQuery, path]);
 
-  const handleClickItem = () => {
-    
-  }
+  const handleClickItem = (fileId: string) => {
+    console.log("clicked");
+    setViewSearchResults(false);
+    setSearchResults([]);
+    setQuery("");
+    router.push(`/view/${fileId}`);
+  };
   return (
-    <div className="relative w-full">
+    <div
+      className="relative w-full"
+      onBlur={async () =>
+        setTimeout(() => {
+          setViewSearchResults(false);
+        }, 300)
+      }
+    >
       <div className="flex h-[52px] flex-1 items-center gap-3 rounded-full shadow-drop-3 px-4">
         <Image
           src={"/assets/icons/search.svg"}
@@ -54,6 +74,9 @@ const Search = () => {
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onFocus={(e) =>
+            e.target.value.length > 0 && setViewSearchResults(true)
+          }
           placeholder="Search..."
           className="body-2 shad-no-focus border-none shadow-none placeholder:body-1 w-full p-0 placeholder:text-light-200"
         />
@@ -64,7 +87,8 @@ const Search = () => {
               searchResults.map((file) => (
                 <li
                   key={file.$id}
-                  className="flex items-center cursor-pointer hover:bg-muted rounded-[10px] p-3 px-5 gap-4"
+                  className="flex items-center cursor-pointer hover:bg-muted rounded-[10px] p-3 px-5 gap-4 transition ease-in-out"
+                  onClick={() => handleClickItem(file.$id)}
                 >
                   <Thumbnail
                     type={file.type}
@@ -72,12 +96,19 @@ const Search = () => {
                     url={file.url}
                     className="!size-8 !min-w-8"
                   />
-                  <p className="flex-1 line-clamp-1 subtitle-2 text-light-100">{file.name}</p>
-                  <FormattedDateTime date={file.$createdAt} className="caption whitespace-nowrap text-light-200"/>
+                  <p className="flex-1 line-clamp-1 subtitle-2 text-light-100">
+                    {file.name}
+                  </p>
+                  <FormattedDateTime
+                    date={file.$createdAt}
+                    className="caption whitespace-nowrap text-light-200"
+                  />
                 </li>
               ))
             ) : (
-              <p className="body-2 text-center text-light-200 p-2">No matching results</p>
+              <p className="body-2 text-center text-light-200 p-2">
+                No matching results
+              </p>
             )}
           </ul>
         )}
