@@ -117,7 +117,6 @@ export const getFiles = async ({
   query,
   sort = "$createdAt-desc",
 }: GetFilesParams) => {
-  console.log("types", types);
   const { databases } = await createAdminClient();
 
   try {
@@ -133,13 +132,44 @@ export const getFiles = async ({
     );
 
     return parseStringify({
-      message: "File retrieved successfully",
+      message: "Files retrieved successfully",
       responseStatus: "success",
       data: files,
     });
   } catch (error) {
     return parseStringify({
-      message: "Failed to rename file. Error found: " + error,
+      message: "Failed to retrieve files. Error found: " + error,
+      responseStatus: "error",
+    });
+  }
+};
+
+interface GetFileParams {
+  fileId: string;
+}
+
+export const getFile = async ({ fileId }: GetFileParams) => {
+  const { databases } = await createAdminClient();
+
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser) throw new Error("User not found");
+
+    const file = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      fileId
+    );
+
+    return parseStringify({
+      message: "File retrieved successfully",
+      responseStatus: "success",
+      data: file,
+    });
+  } catch (error) {
+    return parseStringify({
+      message: "Failed to retrieve file. Error found: " + error,
       responseStatus: "error",
     });
   }

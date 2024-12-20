@@ -18,3 +18,10 @@ declare interface ServerResponseType {
   responseStatus: "success" | "error";
   data?: any;
 }
+
+interface PageParams {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{
+    [param: string]: string;
+  }>;
+}

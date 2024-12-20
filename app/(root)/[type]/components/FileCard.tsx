@@ -13,7 +13,7 @@ interface fileCardProps {
 
 const FileCard = ({ file }: fileCardProps) => {
   return (
-    <Link href={file.url} target="_blank" className="file-card">
+    <Link href={`/view/${file.$id}`} className="file-card">
       <div className="flex items-start justify-between">
         <Thumbnail
           type={file.type}

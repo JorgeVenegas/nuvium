@@ -10,14 +10,6 @@ import { Models } from "node-appwrite";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 const Search = () => {
   const searchParams = useSearchParams();

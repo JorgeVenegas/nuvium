@@ -64,7 +64,7 @@ const FileUploader = () => {
             <input {...getInputProps()} />
             <Button type="button" className="uploader-button">
               <Image
-                src={"assets/icons/upload.svg"}
+                src={"/assets/icons/upload.svg"}
                 alt="Upload File"
                 width={24}
                 height={24}
