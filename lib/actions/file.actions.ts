@@ -9,7 +9,7 @@ import {
   handleError,
   parseStringify,
 } from "@/lib/utils";
-import { ActionType, FileType, ServerResponseType } from "@/types";
+import { FileType, ServerResponseType } from "@/types";
 import { revalidatePath } from "next/cache";
 import { ID, Models, Query } from "node-appwrite";
 

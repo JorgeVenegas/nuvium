@@ -19,7 +19,6 @@ const Page = async ({ params }: PageParams) => {
   const fileId = (await params).fileId;
 
   const { data: file } = await getFile({ fileId });
-  console.log(file);
 
   const PropertySection: FC<{
     label: string;
@@ -70,8 +69,8 @@ const Page = async ({ params }: PageParams) => {
         <Image
           src={file.url}
           alt={file.name}
-          width={500}
-          height={500}
+          width={1000}
+          height={1000}
           className="rounded-[20px] h-full"
         />
       </div>

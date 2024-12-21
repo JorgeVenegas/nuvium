@@ -41,7 +41,6 @@ const Search = () => {
   }, [searchQuery, path]);
 
   const handleClickItem = (fileId: string) => {
-    console.log("clicked");
     setViewSearchResults(false);
     setSearchResults([]);
     setQuery("");
@@ -56,7 +55,7 @@ const Search = () => {
         }, 300)
       }
     >
-      <div className="flex h-[52px] flex-1 items-center gap-3 rounded-full shadow-drop-3 px-4">
+      <div className="flex h-[52px] flex-1 items-center gap-3 rounded-full px-4 shadow-drop-3">
         <Image
           src={"/assets/icons/search.svg"}
           alt="Search"
@@ -70,16 +69,16 @@ const Search = () => {
             e.target.value.length > 0 && setViewSearchResults(true)
           }
           placeholder="Search..."
-          className="body-2 shad-no-focus border-none shadow-none placeholder:body-1 w-full p-0 placeholder:text-light-200"
+          className="body-2 shad-no-focus placeholder:body-1 w-full border-none p-0 shadow-none placeholder:text-light-200"
         />
 
         {viewSearchResults && (
-          <ul className="absolute left-0 top-16 z-50 w-full rounded-[20px] gap-2 bg-white p-2 flex flex-col">
+          <ul className="absolute left-0 top-16 z-50 flex w-full flex-col gap-2 rounded-[20px] bg-white p-2">
             {searchResults.length > 0 ? (
               searchResults.map((file) => (
                 <li
                   key={file.$id}
-                  className="flex items-center cursor-pointer hover:bg-muted rounded-[10px] p-3 px-5 gap-4 transition ease-in-out"
+                  className="flex cursor-pointer items-center gap-4 rounded-[10px] p-3 px-5 transition ease-in-out hover:bg-muted"
                   onClick={() => handleClickItem(file.$id)}
                 >
                   <Thumbnail
@@ -88,7 +87,7 @@ const Search = () => {
                     url={file.url}
                     className="!size-8 !min-w-8"
                   />
-                  <p className="flex-1 line-clamp-1 subtitle-2 text-light-100">
+                  <p className="subtitle-2 line-clamp-1 flex-1 text-light-100">
                     {file.name}
                   </p>
                   <FormattedDateTime
@@ -98,7 +97,7 @@ const Search = () => {
                 </li>
               ))
             ) : (
-              <p className="body-2 text-center text-light-200 p-2">
+              <p className="body-2 p-2 text-center text-light-200">
                 No matching results
               </p>
             )}
