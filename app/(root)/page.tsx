@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default async function Home() {
   const [files, storageDetails] = await Promise.all([
-    getFiles({}),
+    getFiles({ limit: 10 }),
     getTotalSpacedUsed(),
   ]);
 

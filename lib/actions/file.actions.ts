@@ -80,6 +80,7 @@ interface CreateQueriesParams {
   types: FileType[];
   query: string;
   sort: string;
+  limit: number;
 }
 
 const createQueries = ({
@@ -87,6 +88,7 @@ const createQueries = ({
   types,
   query,
   sort,
+  limit,
 }: CreateQueriesParams) => {
   const queries = [
     Query.or([
@@ -97,6 +99,7 @@ const createQueries = ({
 
   if (types.length > 0) queries.push(Query.equal("type", types));
   if (query) queries.push(Query.contains("name", query));
+  if (limit) queries.push(Query.limit(limit));
   if (sort) {
     const [sortBy, orderBy] = sort.split("-");
     queries.push(
@@ -110,12 +113,14 @@ interface GetFilesParams {
   types?: FileType[];
   query?: string;
   sort?: string;
+  limit?: number;
 }
 
 export const getFiles = async ({
   types = [],
   query = "",
   sort = "$createdAt-desc",
+  limit = 1000,
 }: GetFilesParams) => {
   const { databases } = await createAdminClient();
 
@@ -123,7 +128,7 @@ export const getFiles = async ({
     const currentUser = await getCurrentUser();
 
     if (!currentUser) throw new Error("User not found");
-    const queries = createQueries({ currentUser, types, query, sort });
+    const queries = createQueries({ currentUser, types, query, sort, limit });
 
     const files = await databases.listDocuments(
       appwriteConfig.databaseId,
