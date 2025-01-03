@@ -20,10 +20,9 @@ const Page = async ({ params }: PageParams) => {
   }> = ({ label, value, icon }) => (
     <div className="flex flex-col items-start gap-1">
       <div className="flex items-center gap-2">
-        {icon}
-        <span className="subtitle-2 font-semibold">{label}</span>
+        <span className="p-3 bg-brand/20 rounded-full">{icon}</span>
+        <span className="subtitle-2 text-light-200">{value}</span>
       </div>
-      <span className="subtitle-2 text-light-100">{value}</span>
     </div>
   );
   return (
@@ -31,10 +30,10 @@ const Page = async ({ params }: PageParams) => {
       <Card className="w-full shadow-drop-3">
         <CardContent className="flex flex-col gap-4 p-6">
           <div className="flex justify-between">
-            <h3 className="h3">{file.name}</h3>
+            <h3 className="h3 text-light-100">{file.name}</h3>
             <FileCardMenu file={file} />
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 max-w-3xl">
             <PropertySection
               label="Type"
               value={getFileType(file.name).type}
