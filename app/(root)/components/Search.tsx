@@ -73,7 +73,7 @@ const Search = () => {
         />
 
         {viewSearchResults && (
-          <ul className="absolute left-0 top-16 z-50 flex w-full flex-col gap-2 rounded-[20px] bg-white p-2">
+          <ul className="absolute left-0 top-16 z-50 flex w-full flex-col gap-2 rounded-[20px] bg-white p-2 shadow-drop-1">
             {searchResults.length > 0 ? (
               searchResults.map((file) => (
                 <li
