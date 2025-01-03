@@ -317,25 +317,28 @@ export const getTotalSpacedUsed = async () => {
     );
 
     const storageSpaceByType = files.documents.reduce(
-      (acc: Record<FileType, number>, file) => {
+      (acc: Record<FileType, { size: number; count: number }>, file) => {
         if ("type" in file && "size" in file) {
           const fileType = file.type as FileType;
-          if (acc[fileType] !== undefined && acc[fileType] !== null)
-            acc[fileType] += file.size as number;
+          if (!acc[fileType]) {
+            acc[fileType] = { size: 0, count: 0 };
+          }
+          acc[fileType].size += file.size as number;
+          acc[fileType].count += 1;
         }
         return acc;
       },
       {
-        document: 0,
-        image: 0,
-        video: 0,
-        audio: 0,
-        other: 0,
+        document: { size: 0, count: 0 },
+        image: { size: 0, count: 0 },
+        video: { size: 0, count: 0 },
+        audio: { size: 0, count: 0 },
+        other: { size: 0, count: 0 },
       }
     );
 
     const storageSpaceUsed = Object.values(storageSpaceByType).reduce(
-      (total, typeTotal) => (total += typeTotal),
+      (total, typeTotal) => (total += typeTotal.size),
       0
     );
 

@@ -22,7 +22,7 @@ const ActionDropdown = ({ file, onActionSelect }: ActionDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="shad-no-focus">
-        <Image src="/assets/icons/dots.svg" alt="dots" width={34} height={34} />
+        <Image src="/assets/icons/dots.svg" alt="dots" width={34} height={34} className="min-w-[34px]"/>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel className="max-w-[200px] truncate">

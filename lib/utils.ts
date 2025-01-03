@@ -1,4 +1,4 @@
-import { FileType } from "@/types";
+import { FileType, StorageSpaceDetails } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -197,4 +197,38 @@ export const constructFileUrl = (bucketFileId: string) => {
 
 export const constructDownloadUrl = (bucketFileId: string) => {
   return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/download?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
+};
+
+export const getUsageSummary = (totalSpace: StorageSpaceDetails) => {
+  return [
+    {
+      title: "Documents",
+      size: totalSpace.byType["document"].size,
+      files: totalSpace.byType["document"].count,
+      icon: "/assets/icons/file-document-light.svg",
+      url: "/documents",
+    },
+    {
+      title: "Images",
+      size: totalSpace.byType["image"].size,
+      files: totalSpace.byType["image"].count,
+      icon: "/assets/icons/file-image-light.svg",
+      url: "/images",
+    },
+    {
+      title: "Media",
+      size: totalSpace.byType["audio"].size + totalSpace.byType["video"].size,
+      files:
+        totalSpace.byType["audio"].count + totalSpace.byType["video"].count,
+      icon: "/assets/icons/file-video-light.svg",
+      url: "/media",
+    },
+    {
+      title: "Others",
+      files: totalSpace.byType["other"].count,
+      size: totalSpace.byType["other"].size,
+      icon: "/assets/icons/file-other-light.svg",
+      url: "/others",
+    },
+  ];
 };

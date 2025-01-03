@@ -27,12 +27,22 @@ interface PageParams {
   }>;
 }
 
+interface byTypeObject {
+  size: number;
+  count: number;
+}
+
 interface StorageSpaceDetails {
   total: number;
   available: number;
   used: number;
   usedPercentage: string;
   byType: {
-    [FileType]: FileType;
+    [type: FileType]: number;
+    document: byTypeObject;
+    image: byTypeObject;
+    video: byTypeObject;
+    audio: byTypeObject;
+    other: byTypeObject;
   };
 }

@@ -21,7 +21,7 @@ export function MainSpaceChart({
   storageDetails: { total, available, used, usedPercentage, byType },
 }: MainSpaceChartProps) {
   const chartData = [
-    { tag: "space", used: Math.max(used, total * 0.02), available },
+    { tag: "space", used: Math.max(used, total * 0.03), available },
   ];
 
   const chartConfig = {
@@ -29,18 +29,18 @@ export function MainSpaceChart({
     used: {},
   } satisfies ChartConfig;
   return (
-    <Card className="bg-brand">
-      <CardContent className="flex flex-col sm:flex-row p-8 justify-center gap-8">
+    <Card className="bg-brand shadow-drop-4 border-transparent rounded-3xl">
+      <CardContent className="flex flex-col xl:flex-row p-12 justify-center xl:gap-8 gap-4">
         <ChartContainer
           config={chartConfig}
-          className="sm:m-0 mx-auto min-h-[200px] w-[200px] h-[200px]"
+          className="xl:m-0 mx-auto min-h-[180px] h-[180px] w-[180px]"
         >
           <RadialBarChart
             data={chartData}
             startAngle={245}
             endAngle={-65}
-            innerRadius={90}
-            outerRadius={140}
+            innerRadius={80}
+            outerRadius={120}
             className="m-0 p-0 h-full w-full"
           >
             <RadialBar
@@ -88,7 +88,7 @@ export function MainSpaceChart({
             </PolarRadiusAxis>
           </RadialBarChart>
         </ChartContainer>
-        <div className="flex flex-col justify-center gap-2 items-center sm:items-start">
+        <div className="flex flex-col justify-center gap-2 text-center xl:text-left">
           <h2 className="h2 text-white font-bold">Available Storage</h2>
           <span className="subtitle-1 text-muted text-md">
             {convertFileSize(used)}/{convertFileSize(total)}
