@@ -1,3 +1,4 @@
+import { FileType } from "lucide-react";
 import { Models } from "node-appwrite";
 
 declare type FileType = "document" | "image" | "video" | "audio" | "other";
@@ -24,4 +25,14 @@ interface PageParams {
   params: Promise<{
     [param: string]: string;
   }>;
+}
+
+interface StorageSpaceDetails {
+  total: number;
+  available: number;
+  used: number;
+  usedPercentage: string;
+  byType: {
+    [FileType]: FileType;
+  };
 }

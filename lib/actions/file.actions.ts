@@ -9,7 +9,7 @@ import {
   handleError,
   parseStringify,
 } from "@/lib/utils";
-import { FileType, ServerResponseType } from "@/types";
+import { FileType, ServerResponseType, StorageSpaceDetails } from "@/types";
 import { revalidatePath } from "next/cache";
 import { ID, Models, Query } from "node-appwrite";
 
@@ -108,13 +108,13 @@ const createQueries = ({
 
 interface GetFilesParams {
   types?: FileType[];
-  query: string;
+  query?: string;
   sort?: string;
 }
 
 export const getFiles = async ({
   types = [],
-  query,
+  query = "",
   sort = "$createdAt-desc",
 }: GetFilesParams) => {
   const { databases } = await createAdminClient();
@@ -297,6 +297,66 @@ export const deleteFile = async ({
   } catch (error) {
     return parseStringify({
       message: "Failed to delete file. Error found: " + error,
+      responseStatus: "error",
+    });
+  }
+};
+
+export const getTotalSpacedUsed = async () => {
+  const { databases } = await createAdminClient();
+
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser) throw new Error("User not found");
+
+    const files = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      [Query.equal("owner", currentUser.$id)]
+    );
+
+    const storageSpaceByType = files.documents.reduce(
+      (acc: Record<FileType, number>, file) => {
+        if ("type" in file && "size" in file) {
+          const fileType = file.type as FileType;
+          if (acc[fileType] !== undefined && acc[fileType] !== null)
+            acc[fileType] += file.size as number;
+        }
+        return acc;
+      },
+      {
+        document: 0,
+        image: 0,
+        video: 0,
+        audio: 0,
+        other: 0,
+      }
+    );
+
+    const storageSpaceUsed = Object.values(storageSpaceByType).reduce(
+      (total, typeTotal) => (total += typeTotal),
+      0
+    );
+
+    const totalSpace = 2 * 1024 * 1024 * 1024;
+
+    const storageSpaceDetails: StorageSpaceDetails = {
+      total: totalSpace,
+      available: totalSpace - storageSpaceUsed,
+      used: storageSpaceUsed,
+      usedPercentage: ((storageSpaceUsed / totalSpace) * 100).toPrecision(2),
+      byType: storageSpaceByType,
+    };
+
+    return parseStringify({
+      message: "Total space used retrieved successfully",
+      responseStatus: "success",
+      data: storageSpaceDetails,
+    });
+  } catch (error) {
+    return parseStringify({
+      message: "Failed to retrieve total space used. Error found: " + error,
       responseStatus: "error",
     });
   }
