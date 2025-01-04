@@ -14,10 +14,9 @@ const Page = async ({ params }: PageParams) => {
   const { data: file } = await getFile({ fileId });
 
   const PropertySection: FC<{
-    label: string;
     value: string;
     icon: React.ReactNode;
-  }> = ({ label, value, icon }) => (
+  }> = ({ value, icon }) => (
     <div className="flex flex-col items-start gap-1">
       <div className="flex items-center gap-2">
         <span className="p-3 bg-brand/20 rounded-full">{icon}</span>
@@ -35,22 +34,18 @@ const Page = async ({ params }: PageParams) => {
           </div>
           <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 max-w-3xl">
             <PropertySection
-              label="Type"
               value={getFileType(file.name).type}
               icon={<File className="size-5 text-brand" />}
             />
             <PropertySection
-              label="Size"
               value={convertFileSize(file.size)}
               icon={<HardDrive className="size-5 text-brand" />}
             />
             <PropertySection
-              label="Owner"
               value={file.owner.fullName}
               icon={<User className="size-5 text-brand" />}
             />
             <PropertySection
-              label="Last updated"
               value={formatDateTime(file.$updatedAt)}
               icon={<Calendar className="size-5 text-brand" />}
             />

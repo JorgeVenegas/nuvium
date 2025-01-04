@@ -1,6 +1,5 @@
 import { MainSpaceChart } from "@/app/(root)/components/MainSpaceChart";
 import RecentPosts from "@/app/(root)/components/RecentPosts";
-import { Separator } from "@/components/ui/separator";
 import { getFiles, getTotalSpacedUsed } from "@/lib/actions/file.actions";
 import { convertFileSize, getUsageSummary } from "@/lib/utils";
 import Image from "next/image";

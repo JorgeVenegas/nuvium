@@ -4,12 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-interface SideBarProps {
-  fullName: string;
-  email: string;
-  avatar: string;
-}
-
 const Sidebar = () => {
   return (
     <aside className="sidebar">

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Label,
-  PolarGrid,
-  PolarRadiusAxis,
-  RadialBar,
-  RadialBarChart,
-} from "recharts";
+import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
@@ -18,7 +12,7 @@ interface MainSpaceChartProps {
 }
 
 export function MainSpaceChart({
-  storageDetails: { total, available, used, usedPercentage, byType },
+  storageDetails: { total, available, used, usedPercentage },
 }: MainSpaceChartProps) {
   const chartData = [
     { tag: "space", used: Math.max(used, total * 0.03), available },
