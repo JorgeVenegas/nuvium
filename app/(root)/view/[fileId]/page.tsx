@@ -26,7 +26,7 @@ const Page = async ({ params }: PageParams) => {
   );
   return (
     <div className="flex w-full flex-col items-start gap-5">
-      <Card className="w-full shadow-drop-3">
+      <Card className="w-full shadow-drop-3 border-none rounded-3xl">
         <CardContent className="flex flex-col gap-4 p-6">
           <div className="flex justify-between">
             <h3 className="h3 text-light-100">{file.name}</h3>
