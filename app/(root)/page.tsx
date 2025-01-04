@@ -5,6 +5,8 @@ import { convertFileSize, getUsageSummary } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [files, storageDetails] = await Promise.all([
     getFiles({ limit: 10 }),
